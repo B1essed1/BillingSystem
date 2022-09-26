@@ -21,12 +21,12 @@ import shakh.billingsystem.services.AdminService;
 
 import java.util.*;
 
+import static shakh.billingsystem.utilities.Constants.USERNAME_NOT_FOUND;
+
 @Service
 @AllArgsConstructor
 @Slf4j
 public class AdminServiceImpl implements AdminService, UserDetailsService {
-
-
     private final AdminRepository adminRepository;
     private final ReserveAdminRepository reserveAdminRepository;
 
@@ -36,14 +36,10 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Admins admin = adminRepository.findAdminsByUsername(username);
-        if (admin == null) {
-            log.error("Admin not  found in database");
-            throw new UsernameNotFoundException("Admin not found in Db");
-        } else {
-            log.info("user found in database {}", admin);
-        }
+    public UserDetails loadUserByUsername(String username){
+
+        Admins admin = adminRepository.findAdminsByUsername(username)
+                .orElseThrow(()-> new UsernameNotFoundException(String.format(USERNAME_NOT_FOUND,username)));
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 

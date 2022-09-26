@@ -1,22 +1,26 @@
 package shakh.billingsystem.services.implemenations;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import shakh.billingsystem.entities.Admins;
 import shakh.billingsystem.entities.Products;
 import shakh.billingsystem.entities.Unload;
 import shakh.billingsystem.models.UnloadDto;
 import shakh.billingsystem.repositories.UnloadRepository;
 import shakh.billingsystem.services.ProductService;
 import shakh.billingsystem.services.UnloadService;
+import shakh.billingsystem.utilities.Constants;
 
 import java.util.Collections;
 import java.util.Date;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UnloadServiceImpl implements UnloadService {
     private final ProductService productService;
     private final UnloadRepository unloadRepository;
@@ -24,6 +28,7 @@ public class UnloadServiceImpl implements UnloadService {
     public Unload unloadProduct(UnloadDto dto) {
 
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("-------------------------",user);
 
         /**
          ********** TO DO **************
@@ -32,6 +37,9 @@ public class UnloadServiceImpl implements UnloadService {
          * Should add admin who are saving this unload
          * it is not implemented
          * **/
+
+        Admins admins = Constants.getCurrentLoggedInUser();
+        log.info("--------", admins);
 
         Products products = productService.findProductById(dto.getProductId());
         Unload unload = new Unload();
@@ -49,6 +57,7 @@ public class UnloadServiceImpl implements UnloadService {
 
         productService.save(products);
 
+        unload.setAdmin(admins);
         unload.setProducts(products);
         unloadRepository.save(unload);
 

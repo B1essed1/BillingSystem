@@ -24,8 +24,8 @@ import java.util.Map;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static shakh.billingsystem.utilities.Constants.SECURITY_KEY;
 
 @Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
@@ -38,7 +38,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
                     try {
                         String token = authorizationHeader.substring("Bearer ".length());
-                        Algorithm algorithm = Algorithm.HMAC256("b1essed1#billingSystem".getBytes());
+                        Algorithm algorithm = Algorithm.HMAC256(SECURITY_KEY.getBytes());
                         JWTVerifier verifier = JWT.require(algorithm).build();
                         DecodedJWT decodedJWT = verifier.verify(token);
                         String username =  decodedJWT.getSubject();
@@ -53,7 +53,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     } catch (Exception e){
                         log.error("error logging in - -> {}", e.getMessage());
                         response.setHeader("error" , e.getMessage());
-                        response.setStatus(FORBIDDEN.value(),"error");
                         /*response.sendError(FORBIDDEN.value());*/
                         Map<String, String> error_message = new HashMap<>();
                         error_message.put("error_message", e.getMessage());

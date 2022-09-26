@@ -20,10 +20,14 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping("/create/new/")
-    public ResponseEntity createProduct(@RequestBody ProductCreateDto dto) throws NotFoundException {
-        Products products =  productService.convertToProduct(dto);
-        productService.save(products);
+    @PostMapping("/create/new")
+    public ResponseEntity createProduct(@RequestBody ProductCreateDto dto){
+        try {
+            Products products = productService.convertToProduct(dto);
+            productService.save(products);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.toString());
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body("created");
     }

@@ -10,7 +10,6 @@ public class ProductCreateDto {
     private Boolean measureType;
     private Double priceOfBuy;
     private Double priceOfSell;
-    private Double amount;
     private String category;
 
 }

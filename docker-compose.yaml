@@ -1,3 +1,4 @@
+
 version: '3.8'
 services:
   app:
@@ -5,21 +6,23 @@ services:
     build: ./
     ports:
       - "8091:8091"
+    links:
+     - dbpostgresql
     depends_on:
       - dbpostgresql
 
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:6000/billingsystem
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=blessed!@#
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5435/db-billing
+      - SPRING_DATASOURCE_USERNAME=blessed
+      - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create
 
   dbpostgresql:
     image: postgres
     ports:
-      - "6000:5432"
+      - "5435:5432"
     restart: unless-stopped
     environment:
-      - POSTGRES_PASSWORD=blessed!@#
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=billingsystem
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=blessed
+      - POSTGRES_DB=db-billing

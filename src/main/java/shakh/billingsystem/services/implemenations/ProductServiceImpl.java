@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
         products.setCreatedTime(new Date());
         products.setCategory(category);
         products.setMeasureType(dto.getMeasureType());
-        products.setAmount(dto.getAmount());
+        products.setAmount(0.);
         return products;
     }
 }

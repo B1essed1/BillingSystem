@@ -45,7 +45,7 @@ public class RegistrationController {
         mailMessage.setSubject("Tasdiqlash kodi");
         mailMessage.setText(admin.getOneTimePassword().toString());
         mailMessage.setTo(admin.getEmail());
-      //  javaMailSender.send(mailMessage);
+        javaMailSender.send(mailMessage);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(admin.getEmail());
     }

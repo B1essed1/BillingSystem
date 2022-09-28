@@ -10,7 +10,7 @@ import shakh.billingsystem.services.UnloadService;
 
 @RestController
 
-@RequestMapping("api/unload")
+@RequestMapping("/api/unload")
 public class UnloadController {
 
     @Autowired
@@ -23,4 +23,5 @@ public class UnloadController {
         unloadService.unloadProduct(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Created");
     }
+
 }

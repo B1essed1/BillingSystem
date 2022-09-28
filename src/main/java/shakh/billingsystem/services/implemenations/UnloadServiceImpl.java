@@ -10,6 +10,7 @@ import shakh.billingsystem.entities.Admins;
 import shakh.billingsystem.entities.Products;
 import shakh.billingsystem.entities.Unload;
 import shakh.billingsystem.models.UnloadDto;
+import shakh.billingsystem.repositories.AdminRepository;
 import shakh.billingsystem.repositories.UnloadRepository;
 import shakh.billingsystem.services.ProductService;
 import shakh.billingsystem.services.UnloadService;
@@ -23,23 +24,14 @@ import java.util.Date;
 @Slf4j
 public class UnloadServiceImpl implements UnloadService {
     private final ProductService productService;
+    private final AdminRepository adminRepository;
     private final UnloadRepository unloadRepository;
     @Override
     public Unload unloadProduct(UnloadDto dto) {
 
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("-------------------------",user);
-
-        /**
-         ********** TO DO **************
-         *
-         *
-         * Should add admin who are saving this unload
-         * it is not implemented
-         * **/
-
-        Admins admins = Constants.getCurrentLoggedInUser();
-        log.info("--------", admins);
+        Admins admin = adminRepository.findAdminsByUsername(user).get();
 
         Products products = productService.findProductById(dto.getProductId());
         Unload unload = new Unload();
@@ -53,11 +45,10 @@ public class UnloadServiceImpl implements UnloadService {
         products.setLastUpdatedTime(new Date());
         products.setPriceOfSell(dto.getPriceOfSell());
         products.setPriceOfBuy(dto.getPriceOfBuy());
-        products.setUnloads(Collections.singletonList(unload));
 
         productService.save(products);
 
-        unload.setAdmin(admins);
+        unload.setAdmin(admin);
         unload.setProducts(products);
         unloadRepository.save(unload);
 

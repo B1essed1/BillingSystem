@@ -30,9 +30,9 @@ public class UnloadServiceImpl implements UnloadService {
     public Unload unloadProduct(UnloadDto dto) {
 
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("-------------------------",user);
         Admins admin = adminRepository.findAdminsByUsername(user).get();
 
+        //Admins admin = Constants.getCurrentLoggedInUser();
         Products products = productService.findProductById(dto.getProductId());
         Unload unload = new Unload();
         unload.setAmount(dto.getAmount());
@@ -41,9 +41,11 @@ public class UnloadServiceImpl implements UnloadService {
         unload.setIsDeleted(false);
         unload.setPriceOfBuy(dto.getPriceOfBuy());
         unload.setPriceOfSell(dto.getPriceOfSell());
+        unload.setBarcode(products.getBarcode());
 
         products.setLastUpdatedTime(new Date());
         products.setPriceOfSell(dto.getPriceOfSell());
+        products.setAmount(products.getAmount() + dto.getAmount());
         products.setPriceOfBuy(dto.getPriceOfBuy());
 
         productService.save(products);

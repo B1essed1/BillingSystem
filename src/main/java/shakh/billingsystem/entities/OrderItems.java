@@ -25,6 +25,10 @@ public class OrderItems {
 
     private Date createdTime;
 
+    private String category;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Admins admins;
     @ManyToOne(cascade = CascadeType.PERSIST)
     Orders orders;
 

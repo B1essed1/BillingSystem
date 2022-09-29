@@ -1,7 +1,6 @@
 package shakh.billingsystem.entities;
 
-import lombok.Data;
-import lombok.Generated;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.persistence.criteria.Order;
@@ -11,6 +10,9 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Debitors {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +20,7 @@ public class Debitors {
     private String name;
     private String lastName;
     private String additionalDetail;
+    @Column(unique = true)
     private String phoneNumber;
     private Date createdDate;
     private Double debt;

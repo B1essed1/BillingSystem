@@ -14,11 +14,15 @@ public class Payments {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Double payment;
     private Boolean isDeleted = false;
 
-    @ManyToOne
-    Orders orders;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Orders orders;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    Debitors debitors;
+    private   Debitors debitors;
+
+    @ManyToOne
+    private Admins admins;
 }

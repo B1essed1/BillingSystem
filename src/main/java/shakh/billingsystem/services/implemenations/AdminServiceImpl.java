@@ -67,8 +67,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
             reserveAdmin.setOtpRequestedTime(new Date());
             reserveAdmin.setOneTimePassword((random.nextInt(8999)+1000));
             reserveAdmin.setRoleName(dto.getRoleName());
-
-            reserveAdmin.setPhoneNumber(reserveAdmin.getPhoneNumber());
+            reserveAdmin.setPhoneNumber(dto.getPhoneNumber());
 
         } catch (ConstraintViolationException c) {
             log.error("castToAdmin ------> username , firstname , lastname , password , email must not be null", c);

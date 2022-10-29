@@ -1,56 +1,78 @@
 package shakh.billingsystem.configurations;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.ExternalDocumentation;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import org.springdoc.core.GroupedOpenApi;
+import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
-import springfox.documentation.spring.web.plugins.Docket;
+import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Collections;
-import java.util.List;
 
-
-import static java.util.Collections.singletonList;
 import static shakh.billingsystem.utilities.SwaggerConstants.*;
 
 @Configuration
-public class SwaggerConfiguration {
-
+@EnableWebMvc
+public class SwaggerConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
-    public Docket apiDocket(){
-        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).forCodeGeneration(true)
-                .securityContexts(singletonList(securityContext()))
-                .securitySchemes(singletonList(apiKey())).select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
-                .paths(PathSelectors.regex(SECURE_PATH)).build()
-                .tags(new Tag(API_TAG, "All APIs relating to this projects"));
-
+    public GroupedOpenApi publicApi(OpenApiCustomiser apiCustomiser){
+        return GroupedOpenApi.builder()
+                .pathsToMatch(SECURE_PATH,ACTUATOR_PATH)
+                .group(API_TAG)
+                .addOpenApiCustomiser(apiCustomiser)
+                .displayName(TERMS_OF_SERVICE)
+                .build();
+    }
+    @Bean
+    public OpenAPI springShopOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title(API_TITLE)
+                        .description(API_DESCRIPTION)
+                        .version(API_VERSION)
+                        .contact(contacts())
+                        .license(new License().name(LICENSE)
+                                .url(LICENSE_URL)))
+                .externalDocs(new ExternalDocumentation()
+                        .description("SpringShop Wiki Documentation")
+                        .url("https://springshop.wiki.github.org/docs"))
+                .addSecurityItem(new SecurityRequirement()
+                        .addList("bearerAuth"))
+                .components(new Components()
+                        .addSecuritySchemes("bearerAuth", new io.swagger.v3.oas.models.security.SecurityScheme()
+                                .name("bearerAuth")
+                                .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")));
     }
 
-    private ApiInfo apiInfo(){
-        return new ApiInfo(API_TITLE, API_DESCRIPTION,API_VERSION, TERMS_OF_SERVICE,contact(),LICENSE,LICENSE_URL, Collections.emptyList());
+    private Contact contacts(){
+        Contact contact = new Contact();
+        contact.setEmail(CONTACT_EMAIL);
+        contact.setName(CONTACT_NAME);
+        contact.setUrl(CONTACT_URL);
+        return contact;
     }
 
-    private Contact contact(){
-        return new Contact(CONTACT_NAME,CONTACT_URL,CONTACT_EMAIL);
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry){
+        registry.addResourceHandler("swagger-ui/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/swagger-ui/3.25.0/");
     }
 
-    private ApiKey apiKey(){
-        return new ApiKey(SECURITY_REFERENCE,AUTHORIZATION, SecurityScheme.class.getName());
-    }
 
-    private SecurityContext securityContext(){
-        return SecurityContext.builder().securityReferences(securityReference()).build();
-    }
 
-    private List<SecurityReference> securityReference(){
-        AuthorizationScope[] authorizationScopes= {new AuthorizationScope(AUTHORIZATION_SCOPE,AUTHORIZATION_DESCRIPTION)};
-        return singletonList(new SecurityReference(SECURITY_REFERENCE,authorizationScopes));
-    }
 
 }

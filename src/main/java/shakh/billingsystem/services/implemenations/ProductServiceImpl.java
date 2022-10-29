@@ -2,8 +2,6 @@ package shakh.billingsystem.services.implemenations;
 
 import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import shakh.billingsystem.entities.Category;
 import shakh.billingsystem.entities.Products;

@@ -25,7 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     private static final String[] PUBLIC_URLS = {
-            "/v2/api-docs",
+            "/v3/api-docs",
             "/swagger-resources/**",
             "/swagger-ui/index.html",
             "/swagger-ui/**",
@@ -45,9 +45,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(PUBLIC_URLS);
     }
 
-
-
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
@@ -56,8 +53,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                        .cors().and()
-                        .authorizeRequests().antMatchers(PUBLIC_URLS).permitAll();
+                        .cors().and().authorizeRequests()
+                .antMatchers(PUBLIC_URLS).permitAll();
         http.authorizeRequests().antMatchers("/api/admins/**").hasAnyAuthority("ADMIN");
         http.authorizeRequests().antMatchers("/api/products/**").hasAnyAuthority("ADMIN");
         http.sessionManagement().sessionCreationPolicy(STATELESS);

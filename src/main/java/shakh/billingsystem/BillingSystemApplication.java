@@ -3,12 +3,12 @@ package shakh.billingsystem;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @SpringBootApplication
-@EnableSwagger2
 public class BillingSystemApplication {
 
     public static void main(String[] args) {
@@ -18,5 +18,10 @@ public class BillingSystemApplication {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
     }
 }

@@ -25,9 +25,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     private static final String[] PUBLIC_URLS = {
-            "/v3/api-docs",
+            "/v2/api-docs",
             "/swagger-resources/**",
-            "/swagger-ui/index.html",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/webjars/**",
@@ -41,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web){
         web.ignoring().antMatchers(PUBLIC_URLS);
     }
 

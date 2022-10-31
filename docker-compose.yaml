@@ -9,7 +9,6 @@ services:
      - dbpostgresql
     depends_on:
       - dbpostgresql
-      - elasticsearch
     env_file:
       - .env
   dbpostgresql:
@@ -21,37 +20,37 @@ services:
       - .env
     volumes:
      - ./postgres-data:/var/lib/postgresql/data
-
-  elasticsearch:
-    image: elasticsearch:7.17.6
-    restart: always
-    ports:
-       - "9200:9200"
-       - "9300:9300"
-    environment:
-       - bootstrap.memory_lock=true
-       - cluster.name= BillingElastic
-       - discovery.type=single-node
-       - http.host=0.0.0.0
-       - transport.host=127.0.0.1
-       - xpack.security.enabled=false
-       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-    ulimits:
-      memlock:
-       soft: -1
-       hard: -1
-    user: elasticsearch
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9200" ]
-      interval: 30s
-      timeout: 10s
-      retries: 15
-  kibana:
-    image: kibana:7.17.6
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
+#
+#  elasticsearch:
+#    image: elasticsearch:6.8.2
+#    restart: always
+#    ports:
+#       - "9200:9200"
+#       - "9300:9300"
+#    environment:
+#       - bootstrap.memory_lock=true
+#       - cluster.name= BillingElastic
+#       - discovery.type=single-node
+#       - http.host=0.0.0.0
+#       - transport.host=127.0.0.1
+#       - xpack.security.enabled=false
+#       - ES_JAVA_OPTS=-Xms512m -Xmx512m
+#    ulimits:
+#      memlock:
+#       soft: -1
+#       hard: -1
+#    user: elasticsearch
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:9200" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 15
+#  kibana:
+#    image: kibana:7.17.6
+#    ports:
+#      - "5601:5601"
+#    depends_on:
+#      - elasticsearch
   prometheus:
     image: prom/prometheus:v2.35.0
     container_name: prometheus

@@ -6,6 +6,7 @@ target/
 postgres-data/
 logs
 .env
+Gdata
 ### STS ###
 .apt_generated
 .classpath

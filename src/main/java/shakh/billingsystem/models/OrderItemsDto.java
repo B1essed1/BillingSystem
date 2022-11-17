@@ -6,7 +6,7 @@ import lombok.Data;
 public class OrderItemsDto {
     private Long productId;
     private String productName;
-    private Integer barcode;
+    private Long barcode;
     private Double amount;
     private Double priceOfSell;
     private Double priceOfBuy;

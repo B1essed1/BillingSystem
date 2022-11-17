@@ -13,6 +13,7 @@ import shakh.billingsystem.repositories.*;
 import shakh.billingsystem.services.OrderService;
 import shakh.billingsystem.services.ProductService;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -34,9 +35,11 @@ public class OrderServiceImpl implements OrderService {
         try {
             List<OrderItemsDto> orderItems = orderDto.getItemsDto();
             Debitors debitors = null;
-            if (orderDto.getPaidCost()-orderDto.getTotalCost() != 0) {
+            double debt = orderDto.getTotalCost()-orderDto.getPaidCost();
+            if ( debt!= 0) {
                 if (orderDto.getDebitorsId() != null) {
                     debitors = repository.findById(orderDto.getDebitorsId()).get();
+                    debitors.setDebt(debitors.getDebt() + debt);
                 } else {
                     return CustomResponseDto.builder()
                             .isError(true)
@@ -47,20 +50,23 @@ public class OrderServiceImpl implements OrderService {
             }
             Admins admin = adminRepository.findAdminsByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
 
+
+            Payments payments = new Payments();
+            payments.setPayment(orderDto.getPaidCost());
+            payments.setDebitors(debitors);
+            payments.setAdmins(admin);
+            payments.setCreatedDate(new Date());
+            paymentsRepository.save(payments);
+
             Orders orders = new Orders();
             orders.setDebitors(debitors);
             orders.setCreatedTime(new Date());
             orders.setPaidCost(orderDto.getPaidCost());
             orders.setTotalCost(orderDto.getTotalCost());
             orders.setAdmin(admin);
+            orders.setPayments(Collections.singletonList(payments));
             orders = ordersRepository.save(orders);
 
-            Payments payments = new Payments();
-            payments.setPayment(orderDto.getPaidCost());
-            payments.setDebitors(debitors);
-            payments.setOrders(orders);
-            payments.setAdmins(admin);
-            paymentsRepository.save(payments);
 
 
 
@@ -70,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
                 if (products.getAmount()<orderItem.getAmount()) {
                     return CustomResponseDto.builder()
                             .isError(true)
-                            .message("Maxsulot soni bazadi sondan ko'p kiritilgan")
+                            .message("Maxsulot soni magazindagi maxsulot  sonidan ko'p kiritilgan")
                             .build();
                 }
                 products.setAmount(products.getAmount() - orderItem.getAmount());
@@ -82,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
                 items.setPriceOfBuy(orderItem.getPriceOfBuy());
                 items.setProductName(orderItem.getProductName());
                 items.setOrders(orders);
+                items.setBarcode(orderItem.getBarcode());
                 items.setAdmins(admin);
                 orderItemsRepository.save(items);
             }

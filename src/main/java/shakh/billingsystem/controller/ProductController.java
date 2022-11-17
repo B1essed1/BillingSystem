@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shakh.billingsystem.entities.Products;
+import shakh.billingsystem.models.CustomResponseDto;
 import shakh.billingsystem.models.ProductCreateDto;
 import shakh.billingsystem.services.ProductService;
 
@@ -18,8 +19,10 @@ public class ProductController {
     @PostMapping("/create/new")
     public ResponseEntity createProduct(@RequestBody ProductCreateDto dto){
         try {
-            Products products = productService.convertToProduct(dto);
-            Products prod= productService.save(products);
+            CustomResponseDto response = productService.convertToProduct(dto);
+            if (!response.getIsError()){
+                Products prod= productService.save((Products) response.getData());
+            } else return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response.getMessage());
 
 
         }catch (Exception e){

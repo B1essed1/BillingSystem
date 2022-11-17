@@ -29,7 +29,6 @@ import java.util.Optional;
 public class RegistrationController {
 
     private final AdminService adminService;
-
     private final JavaMailSender javaMailSender;
     private final ReserveAdminRepository reserveAdminRepository;
     private final RoleService roleService;
@@ -71,4 +70,6 @@ public class RegistrationController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("otp xato kiritilgan!");
         }
     }
+
+
 }

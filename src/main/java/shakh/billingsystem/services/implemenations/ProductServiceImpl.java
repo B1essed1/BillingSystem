@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import shakh.billingsystem.entities.Category;
 import shakh.billingsystem.entities.Products;
+import shakh.billingsystem.models.CustomResponseDto;
 import shakh.billingsystem.models.ProductCreateDto;
 import shakh.billingsystem.repositories.CategoryRepository;
 import shakh.billingsystem.repositories.ProductRepository;
@@ -31,12 +32,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Products convertToProduct(ProductCreateDto dto) throws NotFoundException {
+    public CustomResponseDto<?> convertToProduct(ProductCreateDto dto) throws NotFoundException {
 
-        Category category = categoryRepository.findByCategory(dto.getCategory());
+
+        Category category = categoryRepository.findByCategory(dto.getCategory()).get();
 
         if (category == null) throw new  NotFoundException("Bunday turdagi categoriya bazada mavjud emas, iltimos categoriyani qaytadan tekshirib, to'g'riligiga ishonch hosil qilib qaytadan urunib ki'ring");
 
+        if (productRepository.findByProductName(dto.getName()).isPresent()){
+            return CustomResponseDto.builder()
+                    .isError(true)
+                    .message(dto.getName() + " bu maxsulot malumotlar omborida mavjud, qaytadan saqlay olmaysiz")
+                    .build();
+        }
         Products products = new Products();
         products.setPriceOfBuy(dto.getPriceOfBuy());
         products.setPriceOfSell(dto.getPriceOfSell());
@@ -46,6 +54,8 @@ public class ProductServiceImpl implements ProductService {
         products.setCategory(category);
         products.setMeasureType(dto.getMeasureType());
         products.setAmount(0.);
-        return products;
+        return CustomResponseDto.builder().isError(false)
+                .data(products)
+                .build();
     }
 }

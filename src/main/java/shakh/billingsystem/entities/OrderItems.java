@@ -1,12 +1,15 @@
 package shakh.billingsystem.entities;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class OrderItems {
 
     @Id
@@ -16,6 +19,9 @@ public class OrderItems {
     private Boolean isDeleted = false;
 
     private Double amount;
+
+    private Long barcode;
+
 
     private String productName;
 

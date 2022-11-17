@@ -1,6 +1,8 @@
 package shakh.billingsystem.entities;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.PositiveOrZero;
@@ -10,7 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Products {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -15,6 +15,8 @@ Project is fully dokcerized:
     
     * Postgres-----implemented✔
     
+    * Kafdrop------implemented✔
+    
 
 All you need to do ```docker-compose up``` and VUALYA if you have Docker you do not have to install anything and cofigure nothing
   

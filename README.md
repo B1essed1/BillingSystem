@@ -34,6 +34,7 @@ with this project shop owner can monitor:
 - daily stats about products that are left less than 10 with cron Job , So shop owner can bring new ones 
 - monthly profit stats or in specific preiod 
 - debitors can pay all debts ✔
+
  and some more features 
  
  Below you can see databes structure briefly 

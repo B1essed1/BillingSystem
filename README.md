@@ -4,10 +4,15 @@ Supermarket billing system
 This project created to use in small/middle shops that has not branches or shopping network
 For database part I used Postgres
 Project is fully dokcerized:
+
   There are some images :
+  
     * Grafana ---- implemenyed ✔
+    
     * Prometheus --implemented ✔
+    
     * Kafka -------Topics created, but Consumers did not implemented ✔
+    
     * Postgres-----implemented✔
     
 

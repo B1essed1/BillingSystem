@@ -7,7 +7,7 @@ Project is fully dokcerized:
 
   There are some images :
   
-    * Grafana ---- implemenyed ✔
+    * Grafana ---- implemened ✔
     
     * Prometheus --implemented ✔
     
@@ -22,7 +22,7 @@ All you need to do ```docker-compose up``` and VUALYA if you have Docker you do 
   
 
 
-Salesmens can be registered with OTP ✔
+Salesmen can be registered with OTP ✔
 
 Project secured with  Role based JWT token so only we can track salesmens ,
 and can add some features that only shop owners can see✔

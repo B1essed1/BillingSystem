@@ -16,7 +16,7 @@ Project is fully dokcerized:
     * Postgres-----implemented✔
     
 
-All you need to do docker-compose up and VUALYA if you have Docker you do not have to install anything and cofidure nothing
+All you need to do *docker-compose up* and VUALYA if you have Docker you do not have to install anything and cofidure nothing
   
 
 

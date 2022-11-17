@@ -16,7 +16,7 @@ Project is fully dokcerized:
     * Postgres-----implemented✔
     
 
-All you need to do ```docker-compose up``` and VUALYA if you have Docker you do not have to install anything and cofidure nothing
+All you need to do ```docker-compose up``` and VUALYA if you have Docker you do not have to install anything and cofigure nothing
   
 
 
@@ -39,6 +39,11 @@ with this project shop owner can monitor:
  
  Below you can see databes structure briefly 
  ![billingsystem](https://user-images.githubusercontent.com/77454227/202519349-d88591a7-e5ac-4651-92da-f4fc29525237.png)
+ 
+ and there is Swwagger docs for client side developers 
+ 
+ ![image](https://user-images.githubusercontent.com/77454227/202520848-a1bcc6b7-06f3-449c-a47b-a5b6524349a2.png)
+
 
  
  

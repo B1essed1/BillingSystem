@@ -1,0 +1,17 @@
+{
+	"ulid": "01GKKZBAHNKZGCBRJ5BH30BKT9",
+	"minTime": 1670270413157,
+	"maxTime": 1670277600000,
+	"stats": {
+		"numSamples": 56875,
+		"numSeries": 455,
+		"numChunks": 910
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01GKKZBAHNKZGCBRJ5BH30BKT9"
+		]
+	},
+	"version": 1
+}

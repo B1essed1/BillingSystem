@@ -1,9 +1,7 @@
 package shakh.billingsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,7 +10,13 @@ import java.util.Collection;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Roles {
+
+    public Roles(String name) {
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

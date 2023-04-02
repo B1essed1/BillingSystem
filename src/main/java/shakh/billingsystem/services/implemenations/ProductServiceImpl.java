@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import shakh.billingsystem.entities.Category;
 import shakh.billingsystem.entities.Products;
-import shakh.billingsystem.models.CustomResponseDto;
+import shakh.billingsystem.models.ApiResponse;
 import shakh.billingsystem.models.ProductCreateDto;
 import shakh.billingsystem.repositories.CategoryRepository;
 import shakh.billingsystem.repositories.ProductRepository;
@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public CustomResponseDto<?> convertToProduct(ProductCreateDto dto) throws NotFoundException {
+    public ApiResponse<?> convertToProduct(ProductCreateDto dto) throws NotFoundException {
 
 
         Category category = categoryRepository.findByCategory(dto.getCategory()).get();
@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
         if (category == null) throw new  NotFoundException("Bunday turdagi categoriya bazada mavjud emas, iltimos categoriyani qaytadan tekshirib, to'g'riligiga ishonch hosil qilib qaytadan urunib ki'ring");
 
         if (productRepository.findByProductName(dto.getName()).isPresent()){
-            return CustomResponseDto.builder()
+            return ApiResponse.builder()
                     .isError(true)
                     .message(dto.getName() + " bu maxsulot malumotlar omborida mavjud, qaytadan saqlay olmaysiz")
                     .build();
@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
         products.setCategory(category);
         products.setMeasureType(dto.getMeasureType());
         products.setAmount(0.);
-        return CustomResponseDto.builder().isError(false)
+        return ApiResponse.builder().isError(false)
                 .data(products)
                 .build();
     }

@@ -37,8 +37,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/api/admins/resend/otp"
     };
 
-
-
     @Override
     public void configure(WebSecurity web){
         web.ignoring().antMatchers(PUBLIC_URLS);

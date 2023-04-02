@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.User;
 import shakh.billingsystem.entities.Admins;
 import shakh.billingsystem.entities.Roles;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,14 +23,14 @@ public class JwtTokenCreator {
         String access_token = JWT.create()
                 .withSubject(admins.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000 * 24 * 7))
-                .withIssuer(String.valueOf(admins.getUsername().hashCode()))
+                .withIssuer(admins.getCompany().getId().toString())
                 .withClaim("roles",  admins.getRoles().stream().map(Roles::getName).collect(Collectors.toList()))
                 .sign(algorithm);
 
         String refresh_token = JWT.create()
                 .withSubject(admins.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000 * 60 * 24 * 30))
-                .withIssuer(String.valueOf(admins.getUsername().hashCode()))
+                .withIssuer(admins.getCompany().getId().toString())
                 .sign(algorithm);
 
         tokens.put("access_token", access_token);

@@ -71,6 +71,12 @@ public class Admins implements UserDetails {
     @OneToMany(cascade = CascadeType.PERSIST,mappedBy = "admin",fetch = FetchType.LAZY, orphanRemoval = true)
     List<Unload> unloads = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "admins", fetch = FetchType.LAZY)
+    List<Payments> payments = new ArrayList<>();
+
+    @ManyToOne
+    private Company company;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -78,7 +84,7 @@ public class Admins implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return isActive;
     }
 
     @Override
@@ -88,12 +94,12 @@ public class Admins implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return isActive;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 
 }

@@ -6,6 +6,7 @@ import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shakh.billingsystem.entities.Admins;
 import shakh.billingsystem.entities.Products;
 import shakh.billingsystem.entities.Unload;
@@ -27,6 +28,7 @@ public class UnloadServiceImpl implements UnloadService {
     private final AdminRepository adminRepository;
     private final UnloadRepository unloadRepository;
     @Override
+    @Transactional
     public Unload unloadProduct(UnloadDto dto) {
 
         String user = SecurityContextHolder.getContext().getAuthentication().getName();

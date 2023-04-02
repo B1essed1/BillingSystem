@@ -2,11 +2,15 @@ package shakh.billingsystem.services;
 
 import shakh.billingsystem.entities.Admins;
 import shakh.billingsystem.entities.ReserveAdmin;
+import shakh.billingsystem.models.ApiResponse;
+import shakh.billingsystem.models.ConfirmDto;
 import shakh.billingsystem.models.RegistrationDto;
 
 public interface AdminService {
-    ReserveAdmin castToAdmin(RegistrationDto dto);
+    ApiResponse register(RegistrationDto dto);
     void save(Admins admins);
 
-    Admins castToAdmin(ReserveAdmin reserve)    ;
+    Admins castToAdmin(RegistrationDto reserve);
+
+    ApiResponse confirm(ConfirmDto dto);
 }

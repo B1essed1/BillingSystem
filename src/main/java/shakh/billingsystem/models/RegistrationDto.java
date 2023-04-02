@@ -24,5 +24,4 @@ public class RegistrationDto {
 
     private String roleName;
 
-    private Boolean isActive;
 }

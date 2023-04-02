@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shakh.billingsystem.entities.Admins;
 import shakh.billingsystem.entities.ReserveAdmin;
 import shakh.billingsystem.entities.Roles;
+import shakh.billingsystem.models.ApiResponse;
 import shakh.billingsystem.models.ConfirmDto;
 import shakh.billingsystem.models.RegistrationDto;
 import shakh.billingsystem.repositories.ReserveAdminRepository;
@@ -30,15 +31,17 @@ public class RegistrationController {
 
     private final AdminService adminService;
     private final JavaMailSender javaMailSender;
-    private final ReserveAdminRepository reserveAdminRepository;
-    private final RoleService roleService;
 
 
     @PostMapping("/registration")
     public ResponseEntity registration(@RequestBody RegistrationDto dto) {
 
-        ReserveAdmin admin = adminService.castToAdmin(dto);
-        reserveAdminRepository.save(admin);
+        ApiResponse response = adminService.register(dto);
+        if (response.getIsError()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
+        }
+        Admins admin = (Admins) response.getData();
+        adminService.save(admin);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setSubject("Tasdiqlash kodi");
@@ -52,24 +55,23 @@ public class RegistrationController {
     @PostMapping("/confirmation")
     public ResponseEntity confirmation(@RequestBody ConfirmDto dto){
 
-        ReserveAdmin reserveAdmin = reserveAdminRepository.findReserveAdminByEmail(dto.getEmail());
-        if (reserveAdmin == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("bunday emaildagi foydalanuvchi mavjud emas");
+        ApiResponse response = adminService.confirm(dto);
 
-        if (Objects.equals(reserveAdmin.getOneTimePassword(), dto.getOtp())){
-            Long diff =  new Date().getTime() - reserveAdmin.getOtpRequestedTime().getTime();
-            if (diff<=120000){
-
-                Admins admins = adminService.castToAdmin(reserveAdmin);
-                adminService.save(admins);
-                return ResponseEntity.status(HttpStatus.CREATED).body(JwtTokenCreator.createJwtToken(admins));
-            }else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("otp time out error");
-            }
-
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("otp xato kiritilgan!");
+        if (response.getIsError()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
         }
+        Admins admins = (Admins) response.getData();
+        return ResponseEntity.ok().body(JwtTokenCreator.createJwtToken(admins));
     }
 
+    @PostMapping("add/company")
+    public ResponseEntity registerCompany(){
+
+        /**TODO
+        * company registration should be implemented
+        */
+
+        return ResponseEntity.ok().body("");
+    }
 
 }

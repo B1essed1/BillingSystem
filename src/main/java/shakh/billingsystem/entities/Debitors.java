@@ -34,4 +34,7 @@ public class Debitors {
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "debitors", fetch = FetchType.LAZY)
     List<Payments> payments = new ArrayList<>();
+
+    @ManyToOne
+    private Company company;
 }

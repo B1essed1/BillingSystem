@@ -1,8 +1,8 @@
 package shakh.billingsystem.services;
 
 import shakh.billingsystem.entities.Category;
-import shakh.billingsystem.models.CustomResponseDto;
+import shakh.billingsystem.models.ApiResponse;
 
 public interface CategoryService {
-    CustomResponseDto  createNewCategory(String category);
+    ApiResponse createNewCategory(String category);
 }

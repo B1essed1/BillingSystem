@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-
 public class Payments {
 
 
@@ -29,6 +28,9 @@ public class Payments {
     @ManyToOne(cascade = CascadeType.PERSIST)
     private   Debitors debitors;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Admins admins;
+
+    @ManyToOne
+    private Company company;
 }

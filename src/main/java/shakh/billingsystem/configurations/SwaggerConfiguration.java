@@ -27,7 +27,7 @@ public class SwaggerConfiguration {
                 .securitySchemes(singletonList(apiKey())).select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                 .paths(PathSelectors.regex(SECURE_PATH)).build()
-                .tags(new Tag(API_TAG, "All APIs relating to this projects"));
+                .tags(new Tag(API_TAG, " "));
 
     }
 

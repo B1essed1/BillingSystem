@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import shakh.billingsystem.entities.Orders;
-import shakh.billingsystem.models.ordersForUpdateDto;
 
 import java.util.List;
 

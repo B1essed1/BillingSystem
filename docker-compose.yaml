@@ -5,21 +5,28 @@ services:
     build: ./
     ports:
       - "8091:8091"
-    links:
-     - dbpostgresql
     depends_on:
-      - dbpostgresql
+      - db
     env_file:
       - .env
-  dbpostgresql:
-    image: postgres
+    networks:
+      - billing-network
+
+
+  db:
+    image: postgres:15rc2-alpine3.16
     ports:
       - "5435:5432"
-    restart: unless-stopped
+    restart: always
     env_file:
       - .env
     volumes:
      - ./postgres-data:/var/lib/postgresql/data
+     - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+    networks:
+    - billing-network
+
+
   prometheus:
     image: prom/prometheus:v2.35.0
     container_name: prometheus
@@ -27,55 +34,27 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./Gdata/prometheus/config:/etc/prometheus/
+      - ./prometheus:/etc/prometheus/prometheus.yaml
+      - ./prometheus_data:/prometheus
     command:
-      - "--config.file=/etc/prometheus/prometheus.yaml"
+        - '--config.file=/etc/prometheus/prometheus.yml'
+
   grafana:
     image: grafana/grafana-oss:8.5.2
     pull_policy: always
     #network_mode: host
     container_name: grafana
     restart: unless-stopped
+    user: "472"
     ports:
       - "3000:3000"
     links:
       - prometheus:prometheus
     volumes:
-      - ./Gdata/grafana:/var/lib/grafana
+      - ./grafana-storage:/var/lib/grafana
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_SERVER_DOMAIN=localhost
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    volumes:
-        - ~/kafka/data/zookeeper_data:/var/lib/zookeeper/data
-        - ~/kafka/data/zookeeper_log:/var/lib/zookeeper/log
-
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-        - zookeeper
-    ports:
-      - "9092:9092"
-    env_file:
-      - .env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf
-      - ./data:/var/lib/kafka/data
-  kafdrop:
-    image: obsidiandynamics/kafdrop
-    restart: "no"
-    ports:
-      - "9000:9000"
-    environment:
-      KAFKA_BROKER_CONNECT: "kafka:29092"
-      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
-    depends_on:
-      - "kafka"
+networks:
+   billing-network:

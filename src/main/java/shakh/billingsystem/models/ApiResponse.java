@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class CustomResponseDto<T>{
-
+public class ApiResponse <T>{
     private Boolean isError;
     private String message;
     private T data;

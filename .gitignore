@@ -38,4 +38,7 @@ build/
 /.mvn/
 /mvnw/
 /mvnw.cmd/
+grafana-storage/
+data/
+prometheus_data/
 

@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shakh.billingsystem.entities.*;
-import shakh.billingsystem.models.CustomResponseDto;
+import shakh.billingsystem.models.ApiResponse;
 import shakh.billingsystem.models.OrderItemsDto;
 import shakh.billingsystem.models.ProductOrderDto;
 import shakh.billingsystem.repositories.*;
@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public CustomResponseDto<?> sell(ProductOrderDto orderDto)  {
+    public ApiResponse<?> sell(ProductOrderDto orderDto)  {
         try {
             List<OrderItemsDto> orderItems = orderDto.getItemsDto();
             Debitors debitors = null;
@@ -41,10 +41,9 @@ public class OrderServiceImpl implements OrderService {
                     debitors = repository.findById(orderDto.getDebitorsId()).get();
                     debitors.setDebt(debitors.getDebt() + debt);
                 } else {
-                    return CustomResponseDto.builder()
+                    return ApiResponse.builder()
                             .isError(true)
-                            .message("3" +
-                                    "Qarzga olayotgan odam biriktirilmagan!")
+                            .message("Qarzga olayotgan odam biriktirilmagan!")
                             .build();
                 }
             }
@@ -74,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
                 OrderItems items = new OrderItems();
                 Products products = productService.findProductById(orderItem.getProductId());
                 if (products.getAmount()<orderItem.getAmount()) {
-                    return CustomResponseDto.builder()
+                    return ApiResponse.builder()
                             .isError(true)
                             .message("Maxsulot soni magazindagi maxsulot  sonidan ko'p kiritilgan")
                             .build();
@@ -93,12 +92,12 @@ public class OrderServiceImpl implements OrderService {
                 orderItemsRepository.save(items);
             }
         } catch (Exception e){
-            return CustomResponseDto.builder()
+            return ApiResponse.builder()
                     .isError(true)
                     .message("Nomalum hatolik yuz berdi " + e)
                     .build();
         }
-        return CustomResponseDto.builder()
+        return ApiResponse.builder()
                 .isError(false)
                 .build();
     }

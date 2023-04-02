@@ -37,5 +37,7 @@ public class Orders {
             inverseJoinColumns = { @JoinColumn(name = "payment_id") })
     List<Payments> payments = new ArrayList<>();
 
+    @ManyToOne
+    private Company company;
 
 }

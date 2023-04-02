@@ -35,4 +35,7 @@ public class Unload {
 
     @ManyToOne(cascade = CascadeType.PERSIST,targetEntity = Admins.class )
     Admins admin;
+
+    @ManyToOne
+    private Company company;
 }

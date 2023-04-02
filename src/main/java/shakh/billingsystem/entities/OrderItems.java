@@ -38,4 +38,6 @@ public class OrderItems {
     @ManyToOne(cascade = CascadeType.PERSIST)
     Orders orders;
 
+    @ManyToOne
+    private Company company;
 }

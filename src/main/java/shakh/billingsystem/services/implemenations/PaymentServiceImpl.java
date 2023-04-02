@@ -2,6 +2,7 @@ package shakh.billingsystem.services.implemenations;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,7 @@ import shakh.billingsystem.entities.Admins;
 import shakh.billingsystem.entities.Debitors;
 import shakh.billingsystem.entities.Orders;
 import shakh.billingsystem.entities.Payments;
-import shakh.billingsystem.models.CustomResponseDto;
+import shakh.billingsystem.models.ApiResponse;
 import shakh.billingsystem.models.PaymentsDto;
 import shakh.billingsystem.repositories.AdminRepository;
 import shakh.billingsystem.repositories.DebitorsRepository;
@@ -18,12 +19,13 @@ import shakh.billingsystem.repositories.PaymentsRepository;
 import shakh.billingsystem.services.PaymentsService;
 
 import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.Date;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Log4j2
 public class PaymentServiceImpl implements PaymentsService {
 
     private final DebitorsRepository debitorsRepository;
@@ -34,7 +36,7 @@ public class PaymentServiceImpl implements PaymentsService {
 
     @Transactional
     @Override
-    public CustomResponseDto payingDebts(PaymentsDto payments) {
+    public ApiResponse payingDebts(PaymentsDto payments) {
 
         try {
 
@@ -77,10 +79,11 @@ public class PaymentServiceImpl implements PaymentsService {
 
         } catch (Exception e) {
             System.out.println("exception " + e);
+            log.error(e);
         }
 
 
-        return CustomResponseDto.builder()
+        return ApiResponse.builder()
                 .message(payments.getPayment() + "miqdoridagi qarzingiz qoplandi")
                 .isError(false)
                 .build();

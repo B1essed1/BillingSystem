@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +14,15 @@ import shakh.billingsystem.entities.Admins;
 import shakh.billingsystem.entities.ReserveAdmin;
 import shakh.billingsystem.entities.Roles;
 import shakh.billingsystem.models.ApiResponse;
+import shakh.billingsystem.models.CompanyRegDto;
 import shakh.billingsystem.models.ConfirmDto;
 import shakh.billingsystem.models.RegistrationDto;
 import shakh.billingsystem.repositories.ReserveAdminRepository;
 import shakh.billingsystem.services.AdminService;
+import shakh.billingsystem.services.CompanyService;
 import shakh.billingsystem.services.RoleService;
 import shakh.billingsystem.utilities.JwtTokenCreator;
+import shakh.billingsystem.utilities.Utils;
 
 import java.util.Date;
 import java.util.Objects;
@@ -31,6 +35,7 @@ public class RegistrationController {
 
     private final AdminService adminService;
     private final JavaMailSender javaMailSender;
+    private final CompanyService companyService;
 
 
     @PostMapping("/registration")
@@ -43,11 +48,7 @@ public class RegistrationController {
         Admins admin = (Admins) response.getData();
         adminService.save(admin);
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setSubject("Tasdiqlash kodi");
-        mailMessage.setText(admin.getOneTimePassword().toString());
-        mailMessage.setTo(admin.getEmail());
-        javaMailSender.send(mailMessage);
+        Utils.sendOtpToEmail(admin, javaMailSender);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(admin.getEmail());
     }
@@ -65,13 +66,13 @@ public class RegistrationController {
     }
 
     @PostMapping("add/company")
-    public ResponseEntity registerCompany(){
+    @PreAuthorize("SUPER_ADMIN")
+    public ResponseEntity registerCompany(@RequestBody CompanyRegDto reg){
 
-        /**TODO
-        * company registration should be implemented
-        */
+        ApiResponse<?> response = companyService.registerCompany(reg);
+        if (response.getIsError())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getMessage());
 
-        return ResponseEntity.ok().body("");
+        return ResponseEntity.status(HttpStatus.OK).body(response.getMessage());
     }
-
 }

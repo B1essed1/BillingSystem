@@ -3,10 +3,7 @@ package shakh.billingsystem.entities;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -17,13 +14,17 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
     private Date createdTime;
 
-    private Boolean isActive;
+    @Column(nullable = false)
+    private String salt;
 
-    private Boolean isPayed;
+    private Boolean isActive = true;
+
+    private Boolean isPayed =  true  ;
 
     private Date paymentTime;
 }

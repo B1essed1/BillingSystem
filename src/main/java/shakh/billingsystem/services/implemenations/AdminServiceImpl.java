@@ -13,12 +13,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import shakh.billingsystem.entities.Admins;
+import shakh.billingsystem.entities.Company;
 import shakh.billingsystem.entities.ReserveAdmin;
 import shakh.billingsystem.entities.Roles;
 import shakh.billingsystem.models.ApiResponse;
 import shakh.billingsystem.models.ConfirmDto;
 import shakh.billingsystem.models.RegistrationDto;
 import shakh.billingsystem.repositories.AdminRepository;
+import shakh.billingsystem.repositories.CompanyRepository;
 import shakh.billingsystem.repositories.ReserveAdminRepository;
 import shakh.billingsystem.services.AdminService;
 import shakh.billingsystem.utilities.JwtTokenCreator;
@@ -36,6 +38,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
     private final AdminRepository adminRepository;
     private final ReserveAdminRepository reserveAdminRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CompanyRepository companyRepository;
 
 
 
@@ -56,7 +59,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
 
     @Override
     public ApiResponse<?> register(RegistrationDto dto) {
-        ReserveAdmin reserveAdmin = new ReserveAdmin();
+
         Optional<ReserveAdmin> check = Optional.ofNullable(reserveAdminRepository.findReserveAdminByUsername(dto.getUsername()));
         if (check.isPresent()) {
             return ApiResponse.builder()
@@ -108,6 +111,13 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
                     .build();
         }
 
+        if (dto.getCompanyName().isEmpty()){
+            return ApiResponse.builder()
+                    .isError(true)
+                    .message("Company name is empty please enter the company name")
+                    .build();
+        }
+
         Admins admin = castToAdmin(dto);
 
         return ApiResponse.builder()
@@ -142,6 +152,12 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
             admins.setUsername(reserve.getUsername());
             admins.setOtpRequestedTime(new Date());
             admins.setActive(false);
+
+
+            Company company = companyRepository.findByName(reserve.getCompanyName()).get();
+
+            admins.setCompany(company);
+
 
             Roles role = new Roles(reserve.getRoleName());
 

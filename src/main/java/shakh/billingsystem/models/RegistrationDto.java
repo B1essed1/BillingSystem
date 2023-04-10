@@ -24,4 +24,6 @@ public class RegistrationDto {
 
     private String roleName;
 
+    private String companyName;
+
 }

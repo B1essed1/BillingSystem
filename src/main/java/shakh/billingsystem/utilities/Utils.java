@@ -1,9 +1,14 @@
 package shakh.billingsystem.utilities;
 
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import shakh.billingsystem.entities.Admins;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
+
     public static boolean isPhoneValid(String phone) {
         String pattern = "^\\+998[0-9]{2}[0-9]{7}$";
         if (phone == null || !phone.matches(pattern)) {
@@ -38,6 +43,14 @@ public class Utils {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public static void sendOtpToEmail(Admins admin, JavaMailSender javaMailSender){
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setSubject("Tasdiqlash kodi");
+        mailMessage.setText(admin.getOneTimePassword().toString());
+        mailMessage.setTo(admin.getEmail());
+        javaMailSender.send(mailMessage);
     }
 
 }
